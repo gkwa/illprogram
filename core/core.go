@@ -15,6 +15,7 @@ func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
 	if len(instances) == 0 {
 		return cue.Value{}, fmt.Errorf("no CUE instance found in %s", filename)
 	}
+
 	instance := ctx.BuildInstance(instances[0])
 	if err := instance.Value().Err(); err != nil {
 		return cue.Value{}, fmt.Errorf("failed to build CUE instance: %v", err)
@@ -38,7 +39,6 @@ func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
 	for iter.Next() {
 		key := iter.Label()
 		value := iter.Value()
-
 		fmt.Printf("Key: %s\n", key)
 
 		templatesIter, err := value.LookupPath(cue.ParsePath("templates")).List()
@@ -52,17 +52,22 @@ func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
 			if err != nil {
 				return cue.Value{}, fmt.Errorf("failed to get template string: %w", err)
 			}
-			fmt.Printf("  Template: %s\n", templateStr)
+			fmt.Printf(" Template: %s\n", templateStr)
 
 			pathStr, err := template.LookupPath(cue.ParsePath("path")).String()
 			if err != nil {
 				return cue.Value{}, fmt.Errorf("failed to get path string: %w", err)
 			}
-			fmt.Printf("  Path: %s\n", pathStr)
+			fmt.Printf(" Path: %s\n", pathStr)
 		}
-
 		fmt.Println()
 	}
+
+	fmt.Println("Encoded value:")
+	fmt.Println(ctx.Encode(val))
+
+	fmt.Println("Encoded type:")
+	fmt.Println(ctx.EncodeType(val))
 
 	return val, nil
 }
