@@ -32,7 +32,8 @@ check: tidy fmt lint vet
 build: $(BIN)
 
 $(BIN): $(SRC)
-	go build -ldflags "$(LDFLAGS)" -o $@ main.go
+	# go build -ldflags "$(LDFLAGS)" -o $@ main.go
+	go build -o $@ main.go
 
 .PHONY: goreleaser # run goreleaser
 goreleaser:
