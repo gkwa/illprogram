@@ -2,15 +2,22 @@
 
 Purpose:
 
+## Path
+
+https://github.com/taylormonacelli/illprogram
+
 
 ## example usage
 
 ```bash
+illprogram run
 
 
 ```
 
 ## install illprogram
+
+
 
 
 on macos/linux:
