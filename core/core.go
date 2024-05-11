@@ -10,7 +10,7 @@ import (
 )
 
 func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
-	instances := load.Instances([]string{"."}, nil)
+	instances := load.Instances([]string{filename}, nil)
 	if len(instances) == 0 {
 		return cue.Value{}, fmt.Errorf("no CUE instance found in %s", filename)
 	}
