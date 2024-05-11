@@ -3,48 +3,65 @@ package core
 import (
 	"fmt"
 	"log"
-	"os"
 
-	"gopkg.in/yaml.v2"
+	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
+	"cuelang.org/go/cue/load"
 )
 
-type Template struct {
-	Template string `yaml:"template"`
-	Path     string `yaml:"path"`
-}
-
-type Config struct {
-	Templates []Template `yaml:"templates"`
-}
-
-type Data map[string]Config
-
-func LoadData(filename string) Data {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		log.Fatalf("Error reading file: %v", err)
+func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
+	instances := load.Instances([]string{filename}, nil)
+	if len(instances) == 0 {
+		return cue.Value{}, fmt.Errorf("no CUE instance found in %s", filename)
+	}
+	instance := ctx.BuildInstance(instances[0])
+	if err := instance.Value().Err(); err != nil {
+		return cue.Value{}, fmt.Errorf("failed to build CUE instance: %v", err)
 	}
 
-	var yamlData Data
-	err = yaml.Unmarshal(data, &yamlData)
-	if err != nil {
-		log.Fatalf("Error unmarshaling YAML: %v", err)
-	}
-	return yamlData
-}
+	val := instance.Value()
 
-func IterateData(data Data) {
-	for key, config := range data {
+	iter, err := val.Fields()
+	if err != nil {
+		return cue.Value{}, fmt.Errorf("failed to iterate over CUE fields: %w", err)
+	}
+
+	for iter.Next() {
+		key := iter.Label()
+		value := iter.Value()
+
 		fmt.Printf("Key: %s\n", key)
-		for _, template := range config.Templates {
-			fmt.Printf("  Template: %s\n", template.Template)
-			fmt.Printf("  Path: %s\n", template.Path)
+
+		templatesIter, err := value.LookupPath(cue.ParsePath("templates")).List()
+		if err != nil {
+			return cue.Value{}, fmt.Errorf("failed to get templates list: %w", err)
 		}
+
+		for templatesIter.Next() {
+			template := templatesIter.Value()
+			templateStr, err := template.LookupPath(cue.ParsePath("template")).String()
+			if err != nil {
+				return cue.Value{}, fmt.Errorf("failed to get template string: %w", err)
+			}
+			fmt.Printf("  Template: %s\n", templateStr)
+
+			pathStr, err := template.LookupPath(cue.ParsePath("path")).String()
+			if err != nil {
+				return cue.Value{}, fmt.Errorf("failed to get path string: %w", err)
+			}
+			fmt.Printf("  Path: %s\n", pathStr)
+		}
+
 		fmt.Println()
 	}
+
+	return val, nil
 }
 
 func Run() {
-	data := LoadData("templates.yaml")
-	IterateData(data)
+	ctx := cuecontext.New()
+	_, err := LoadTemplates(ctx, "templates.cue")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
