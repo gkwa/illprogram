@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
@@ -20,6 +21,14 @@ func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
 	}
 
 	val := instance.Value()
+
+	genFile, err := os.ReadFile("core/core_go_gen.cue")
+	if err != nil {
+		return cue.Value{}, fmt.Errorf("failed to read gen file: %w", err)
+	}
+
+	gen := ctx.CompileString(string(genFile))
+	val = val.Unify(gen)
 
 	iter, err := val.Fields()
 	if err != nil {
