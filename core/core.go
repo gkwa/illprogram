@@ -16,10 +16,10 @@ import (
 //go:embed core_go_gen.cue
 var genFile string
 
-func LoadTemplates(ctx *cue.Context, filename string) (cue.Value, error) {
-	instances := load.Instances([]string{filename}, nil)
+func LoadTemplates(ctx *cue.Context) (cue.Value, error) {
+	instances := load.Instances([]string{"."}, nil)
 	if len(instances) == 0 {
-		return cue.Value{}, fmt.Errorf("no CUE instance found in %s", filename)
+		return cue.Value{}, fmt.Errorf("no CUE instance found in current directory")
 	}
 
 	instance := ctx.BuildInstance(instances[0])
@@ -87,7 +87,7 @@ func WriteYAML(val cue.Value, filename string) error {
 
 func Run() {
 	ctx := cuecontext.New()
-	val, err := LoadTemplates(ctx, "templates.cue")
+	val, err := LoadTemplates(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
