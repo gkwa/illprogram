@@ -10,12 +10,6 @@ type BuildInfo struct {
 	Version     string
 }
 
-func (bi BuildInfo) String() string {
-	return fmt.Sprintf(`Version: %s, %s
-Build Date: %s
-Go Version: %s`, bi.Version, bi.FullGitSHA, bi.Date, bi.GoVersion)
-}
-
 var (
 	Date        string
 	FullGitSHA  string
@@ -23,6 +17,12 @@ var (
 	ShortGitSHA string
 	Version     string
 )
+
+func (bi BuildInfo) String() string {
+	return fmt.Sprintf(`Version: %s, %s
+Build Date: %s
+Go Version: %s`, bi.Version, bi.FullGitSHA, bi.Date, bi.GoVersion)
+}
 
 func GetBuildInfo() BuildInfo {
 	return BuildInfo{
