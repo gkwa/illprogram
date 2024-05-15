@@ -23,56 +23,63 @@ all: check $(BIN) install
 iterate: check $(BIN)
 
 .PHONY: check # lint and vet
-check: .check_timestamp
+check: .timestamps/.check.time
 
-.check_timestamp: tidy fmt lint vet
+.timestamps/.check.time: tidy fmt lint vet
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: build # build
 build: $(BIN)
 
-$(BIN): .build_timestamp
+$(BIN): .timestamps/.build.time
 	go build -ldflags "$(LDFLAGS)" -o $@ main.go
 
-.build_timestamp: $(SRC) $(CUE_SRC)
+.timestamps/.build.time: $(SRC) $(CUE_SRC)
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: goreleaser # run goreleaser
 goreleaser: goreleaser --clean
 
 .PHONY: tidy # go tidy
-tidy: .tidy_timestamp
+tidy: .timestamps/.tidy.time
 
-.tidy_timestamp: go.mod go.sum
+.timestamps/.tidy.time: go.mod go.sum
 	go mod tidy
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: fmt # go fmt
-fmt: .fmt_timestamp
+fmt: .timestamps/.fmt.time
 
-.fmt_timestamp: $(SRC)
+.timestamps/.fmt.time: $(SRC)
 	gofumpt -w $(SRC)
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: cue_fmt # cue fmt
-cue_fmt: .cue_fmt_timestamp
+cue_fmt: .timestamps/.cue_fmt.time
 
-.cue_fmt_timestamp: $(CUE_SRC)
+.timestamps/.cue_fmt.time: $(CUE_SRC)
 	cue fmt $(CUE_SRC)
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: lint # lint
-lint: .lint_timestamp
+lint: .timestamps/.lint.time
 
-.lint_timestamp: $(SRC)
+.timestamps/.lint.time: $(SRC)
 	golangci-lint run
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: vet # go vet
-vet: .vet_timestamp
+vet: .timestamps/.vet.time
 
-.vet_timestamp: $(SRC)
+.timestamps/.vet.time: $(SRC)
 	go vet ./...
+	@mkdir -p .timestamps
 	@touch $@
 
 .PHONY: install # go install
@@ -85,4 +92,4 @@ help:
 
 .PHONY: clean # clean bin
 clean:
-	$(RM) $(BIN) .build_timestamp .tidy_timestamp .fmt_timestamp .cue_fmt_timestamp .lint_timestamp .vet_timestamp .check_timestamp
+	$(RM) -r $(BIN) .timestamps
