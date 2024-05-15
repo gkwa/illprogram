@@ -14,7 +14,7 @@ import (
 	"cuelang.org/go/encoding/yaml"
 )
 
-//go:embed core_go_gen.cue
+//go:embed schema.cue
 var genFile string
 
 func LoadTemplates(ctx *cue.Context) (cue.Value, error) {
