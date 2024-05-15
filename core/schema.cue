@@ -1,12 +1,12 @@
 package core
 
 #Template: {
-   template: string @go(Template)
-   path1:    string @go(Path)
+	template: string @go(Template)
+	path:     string @go(Path)
 }
 
 #Config: {
-   templates: [...#Template] @go(Templates,[]Template)
+	templates: [...#Template] @go(Templates,[]Template)
 }
 
 #Data: [string]: #Config

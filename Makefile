@@ -62,7 +62,7 @@ fmt: .timestamps/.fmt.time
 cue_fmt: .timestamps/.cue_fmt.time
 
 .timestamps/.cue_fmt.time: $(CUE_SRC)
-	cue fmt $(CUE_SRC)
+	$(foreach file,$(CUE_SRC),cue fmt $(file);)
 	@mkdir -p .timestamps
 	@touch $@
 
