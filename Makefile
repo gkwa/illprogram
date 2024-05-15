@@ -51,7 +51,7 @@ tidy: .timestamps/.tidy.time
 	@touch $@
 
 .PHONY: fmt # go fmt
-fmt: .timestamps/.fmt.time
+fmt: .timestamps/.fmt.time cue_fmt
 
 .timestamps/.fmt.time: $(SRC)
 	gofumpt -w $(SRC)
