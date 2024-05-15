@@ -39,6 +39,10 @@ func LoadTemplates(ctx *cue.Context) (cue.Value, error) {
 		return cue.Value{}, fmt.Errorf("validation failed: %v", err)
 	}
 
+	if err := val.Validate(); err != nil {
+		return cue.Value{}, fmt.Errorf("validation failed: %v", err)
+	}
+
 	return val, nil
 }
 

@@ -32,7 +32,7 @@ _version: [
 _shared: _cookiecutter_json + _post_gen_project + _readme + _gitignore + _workflows + _go_mod
 
 allshire: templates: _shared + [
-   {template: "go/Makefile/Makefile3.j2", path: "{{ cookiecutter.project_slug }}/Makefile"},  
+   {template: "go/Makefile/Makefile3.j2", path: "{{ cookiecutter.project_slug }}/Makefile"},
    {template: "go/magefile/magefile3.go.j2", path: "{{ cookiecutter.project_slug }}/magefile.go"},
    {template: "go/goreleaser/goreleaser3.yaml.j2", path: "{{ cookiecutter.project_slug }}/.goreleaser.yaml"},
    {template: "go/version/version2.go.j2", path: "{{ cookiecutter.project_slug }}/version.go"},

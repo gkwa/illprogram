@@ -138,4 +138,3 @@ bluesorrow:
       path: '{{ cookiecutter.project_slug }}/.github/workflows/release.yml'
     - template: go/go.mod/go.mod.j2
       path: '{{ cookiecutter.project_slug }}/go.mod'
-
