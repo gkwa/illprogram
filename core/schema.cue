@@ -2,7 +2,7 @@ package core
 
 #Template: {
    template: string @go(Template)
-   path1:     string @go(Path)
+   path1:    string @go(Path)
 }
 
 #Config: {

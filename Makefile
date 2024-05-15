@@ -1,6 +1,7 @@
 BIN := illprogram
 
 SRC := $(wildcard *.go **/*.go)
+CUE_SRC := $(wildcard *.cue **/*.cue)
 
 DATE := $(shell date +"%Y-%m-%dT%H:%M:%SZ")
 GOVERSION := $(shell go version)
@@ -31,7 +32,7 @@ check: tidy fmt lint vet
 .PHONY: build # build
 build: $(BIN)
 
-$(BIN): $(SRC)
+$(BIN): $(SRC) $(CUE_SRC)
 	go build -ldflags "$(LDFLAGS)" -o $@ main.go
 
 .PHONY: goreleaser # run goreleaser
@@ -45,6 +46,10 @@ tidy:
 .PHONY: fmt # go fmt
 fmt:
 	gofumpt -w $(SRC)
+
+.PHONY: cue_fmt # cue fmt
+cue_fmt:
+	cue fmt $(CUE_SRC)
 
 .PHONY: lint # lint
 lint:

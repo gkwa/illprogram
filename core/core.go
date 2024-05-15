@@ -24,7 +24,7 @@ func LoadTemplates(ctx *cue.Context) (cue.Value, error) {
 	}
 
 	instance := ctx.BuildInstance(instances[0])
-	if err := instance.Value().Err(); err != nil {
+	if err := instance.Err(); err != nil {
 		return cue.Value{}, fmt.Errorf("failed to build CUE instance: %v", err)
 	}
 
@@ -34,11 +34,12 @@ func LoadTemplates(ctx *cue.Context) (cue.Value, error) {
 		return cue.Value{}, fmt.Errorf("failed to compile schema: %v", err)
 	}
 
-	val = val.Unify(schema)
-	if err := val.Validate(); err != nil {
-		return cue.Value{}, fmt.Errorf("validation failed: %v", err)
+	schemaVal := schema.LookupPath(cue.ParsePath("#Data"))
+	if err := schemaVal.Err(); err != nil {
+		return cue.Value{}, fmt.Errorf("failed to lookup #Data in schema: %v", err)
 	}
 
+	val = val.Unify(schemaVal)
 	if err := val.Validate(); err != nil {
 		return cue.Value{}, fmt.Errorf("validation failed: %v", err)
 	}
