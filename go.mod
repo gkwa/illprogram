@@ -3,7 +3,7 @@ module github.com/taylormonacelli/illprogram
 go 1.22.0
 
 require (
-	cuelang.org/go v0.11.0
+	cuelang.org/go v0.11.1
 	github.com/go-git/go-git/v5 v5.12.0
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.8.1
