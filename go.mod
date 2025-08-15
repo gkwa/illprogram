@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.24.6
 
 require (
-	cuelang.org/go v0.14.0
+	cuelang.org/go v0.14.1
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.9.1
