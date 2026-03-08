@@ -2,7 +2,7 @@ module github.com/taylormonacelli/illprogram
 
 go 1.24.0
 
-toolchain go1.26.0
+toolchain go1.26.1
 
 require (
 	cuelang.org/go v0.15.4
